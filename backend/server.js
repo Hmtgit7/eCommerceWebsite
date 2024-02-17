@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/database.js";
 
 //CONFIG
-dotenv.config({ path: "backened/config/config.env" });
+dotenv.config({ path: "backend/config/.env" });
 
 
 //DATABASE CONNECTION
@@ -21,5 +21,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is working on https://localhost:${PORT}`);
+  console.log(`Server is working on http://localhost:${PORT}`);
 });
