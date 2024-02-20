@@ -1,24 +1,39 @@
-class ApiFeatures{
+class ApiFeatures {
+  constructor(query, queryStr) {
+    this.query = query;
+    this.queryStr = queryStr;
+  }
 
-    constructor(query,queryStr){
-        this.query=query;
-        this.queryStr=queryStr;
-    }
+  search() {
+    const keyword = this.queryStr.keyword
+      ? {
+          name: {
+            $regex: this.queryStr.keyword,
+            $options: "i",
+          },
+        }
+      : {};
 
-    search(){
-        const keyword=this.queryStr.keyword?{
-            name:{
-                $regex:this.queryStr.keyword,
-                $options:"i",
-            }
-        }:{};
+    console.log(keyword);
 
-        console.log(keyword);
+    this.query = this.query.find({ ...keyword });
+    return this;
+  }
 
-        this.query=this.query.find({...keyword});
-        return this;
-    }
+  filter() {
+    const queryCopy = { ...this.queryStr };
+
+    //Removing some fields for filter or category
+    const removeFields = ["keyword", "page", "limit"];
+
+    removeFields.forEach((key) => delete queryCopy[key]);
+
+    console.log(queryCopy);
+
+    this.query = this.query.find({ queryCopy });
+
+    return this;
+  }
 }
-
 
 export default ApiFeatures;
