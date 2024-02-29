@@ -19,14 +19,21 @@ export const createProduct = catchAsyncErrors(async (req, res, next) => {
 //Get all Products
 
 export const getAllProducts = catchAsyncErrors(async (req, res) => {
+
+  const resultPerPage=10;
+  const productCount = await Product.countDocuments();
+
   const apiFeature = new ApiFeatures(Product.find(), req.query)
     .search()
-    .filter();
+    .filter()
+    .pagination(resultPerPage);
+
   const products = await apiFeature.query;
 
   res.status(200).json({
     sucess: true,
     products,
+    productCount,
   });
 
   // res.status(200).json({message:"route is working properly"})
