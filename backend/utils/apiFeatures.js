@@ -22,17 +22,34 @@ class ApiFeatures {
 
   filter() {
     const queryCopy = { ...this.queryStr };
+    // console.log(queryCopy);
 
     //Removing some fields for filter or category
     const removeFields = ["keyword", "page", "limit"];
 
-    removeFields.forEach((key) => delete queryCopy[key]);
+    removeFields.forEach(key => delete queryCopy[key]);
 
-    console.log(queryCopy);
+    // Remove fields for Price and Rating
 
-    this.query = this.query.find({ queryCopy });
+    // console.log(queryCopy);
+    
+    let queryStr=JSON.stringify(queryCopy);
+
+    queryStr=queryStr.replace(/\b(gte|gt|lt|lte)\b/g, key => `$${key}`); 
+    
+    this.query = this.query.find( JSON.parse(queryStr) );
 
     return this;
+  }
+
+  paginatio(resultPerPage){
+  const currentPage=Number(this.queryStr.page || 1);
+
+  const skip=resultPerPage*(currentPage-1);
+
+  this.query=this.query.limit(resultPerPage).skip(skip);
+  
+  return this;
   }
 }
 
