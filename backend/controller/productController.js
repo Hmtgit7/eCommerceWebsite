@@ -7,6 +7,9 @@ import ApiFeatures from "../utils/apiFeatures.js";
 
 export const createProduct = catchAsyncErrors(async (req, res, next) => {
   // res.send("my name is lallallall")
+
+  req.body.user=await req.user.id; 
+
   const product = await Product.create(req.body);
   console.log(req.body);
 
