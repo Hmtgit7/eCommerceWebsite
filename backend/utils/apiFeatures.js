@@ -14,43 +14,36 @@ class ApiFeatures {
         }
       : {};
 
-    console.log(keyword);
-
     this.query = this.query.find({ ...keyword });
     return this;
   }
 
   filter() {
     const queryCopy = { ...this.queryStr };
-    // console.log(queryCopy);
-
-    //Removing some fields for filter or category
+    //   Removing some fields for category
     const removeFields = ["keyword", "page", "limit"];
 
-    removeFields.forEach(key => delete queryCopy[key]);
+    removeFields.forEach((key) => delete queryCopy[key]);
 
-    // Remove fields for Price and Rating
+    // Filter For Price and Rating
 
-    // console.log(queryCopy);
-    
-    let queryStr=JSON.stringify(queryCopy);
+    let queryStr = JSON.stringify(queryCopy);
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (key) => `$${key}`);
 
-    queryStr=queryStr.replace(/\b(gte|gt|lt|lte)\b/g, key => `$${key}`); 
-    
-    this.query = this.query.find( JSON.parse(queryStr) );
+    this.query = this.query.find(JSON.parse(queryStr));
 
     return this;
   }
 
-  paginatio(resultPerPage){
-  const currentPage=Number(this.queryStr.page || 1);
+  pagination(resultPerPage) {
+    const currentPage = Number(this.queryStr.page) || 1;
 
-  const skip=resultPerPage*(currentPage-1);
+    const skip = resultPerPage * (currentPage - 1);
 
-  this.query=this.query.limit(resultPerPage).skip(skip);
-  
-  return this;
+    this.query = this.query.limit(resultPerPage).skip(skip);
+
+    return this;
   }
 }
 
-export default ApiFeatures;
+module.exports = ApiFeatures;

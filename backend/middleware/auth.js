@@ -1,33 +1,33 @@
-import ErrorHandler from "../utils/errorHandler.js";
-import { catchAsyncErrors } from "./catchAsyncErrors.js";
-import jwt from "jsonwebtoken";
-import User from "../models/userModel.js";
+const ErrorHander = require("../utils/errorhander");
+const catchAsyncErrors = require("./catchAsyncErrors");
+const jwt = require("jsonwebtoken");
+const User = require("../models/userModel");
 
-export const isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
+exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
   const { token } = req.cookies;
-  console.log(token);
 
   if (!token) {
-    return next(new ErrorHandler(" Login first to access this resource.", 401));
+    return next(new ErrorHander("Please Login to access this resource", 401));
   }
 
-  const decodedData = jwt.verify(token, process.env.JWT_SECRET_KEY);
+  const decodedData = jwt.verify(token, process.env.JWT_SECRET);
 
-  req.user = await User.findById(decodedData._id);
+  req.user = await User.findById(decodedData.id);
 
   next();
 });
 
-export const authorizeRoles=(...roles)=>{
-
-  return(req,res,next)=>{
-    if(!roles.includes(req.user.role)){
+exports.authorizeRoles = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
       return next(
-        new ErrorHandler(`Role : (${req.user.role}) is not allowed to access this resource`,403)
+        new ErrorHander(
+          `Role: ${req.user.role} is not allowed to access this resouce `,
+          403
+        )
       );
     }
 
     next();
   };
-
-}
+};
