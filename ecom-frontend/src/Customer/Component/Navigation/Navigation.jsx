@@ -35,6 +35,8 @@ import {
   ShoppingBagIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import logo from "../../../Assests/Logo.png";
+import flagIndia from "../../../Assests/flag-india.svg";
 
 const navigation = {
   categories: [
@@ -347,9 +349,9 @@ export default function Navigation() {
                 <a href="#">
                   <span className="sr-only">Your Company</span>
                   <img
-                    alt=""
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                    className="h-8 w-auto"
+                    alt="logo"
+                    src={logo}
+                    className="h-20 w-auto"
                   />
                 </a>
               </div>
@@ -478,10 +480,10 @@ export default function Navigation() {
                   >
                     <img
                       alt=""
-                      src="https://tailwindui.com/img/flags/flag-canada.svg"
-                      className="block h-auto w-5 flex-shrink-0"
+                      src={flagIndia}
+                      className="block h-10 w-auto flex-shrink-0"
                     />
-                    <span className="ml-3 block text-sm font-medium">CAD</span>
+                    <span className="ml-3 block text-sm font-medium">IND</span>
                     <span className="sr-only">, change currency</span>
                   </a>
                 </div>
