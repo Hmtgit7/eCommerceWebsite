@@ -131,4 +131,5 @@ module.exports = {
   userOrderHistory,
   getAllOrders,
   deleteOrder,
+  findOrderById
 };
