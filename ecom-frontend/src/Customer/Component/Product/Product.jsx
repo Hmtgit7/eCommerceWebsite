@@ -51,25 +51,36 @@ export default function Product() {
   const navigate = useNavigate();
 
   const handleFilter = (value, sectionID) => {
-    const searchParams = new URLSearchParams(location.search);
+    let searchParams = new URLSearchParams(location.search);
 
-    const filterValue = searchParams.getAll(sectionID);
+    let filterValue = searchParams.getAll(sectionID);
 
     if (filterValue.length > 0 && filterValue[0].split(",").includes(value)) {
       filterValue = filterValue[0].split(",").filter((item) => item !== value);
 
       if (filterValue.length === 0) {
         searchParams.delete(sectionID);
-      } else {
-        filterValue.push(value);
       }
-      if (filterValue.length > 0) {
-        searchParams.set(sectionID, filterValue.join(","));
-        const query = searchParams.toString();
-        navigate({ search: `?${query}` });
-      }
+    } else {
+      filterValue.push(value);
     }
+
+    if (filterValue.length > 0) {
+      searchParams.set(sectionID, filterValue.join(","));
+    }
+    let query = searchParams.toString();
+    navigate({ search: `?${query}` });
   };
+
+  const handleRadioFilterChange=(e,sectionId)=>{
+    let searchParams = new URLSearchParams(location.search);
+    
+    searchParams.set(sectionId, e.target.value)
+
+    let query = searchParams.toString();
+    navigate({ search: `?${query}` });
+    
+  }
 
   return (
     <div className="bg-white">
@@ -185,7 +196,7 @@ export default function Product() {
                     </h3>
 
                     <DisclosurePanel className="pt-6">
-                      <FormControl>
+                      <FormControl onChange={(e)=>handleRadioFilterChange(e,section.id)}>
                         <div className="space-y-4">
                           <RadioGroup
                             aria-labelledby="demo-radio-buttons-group-label"
@@ -320,6 +331,9 @@ export default function Product() {
                               className="flex items-center"
                             >
                               <input
+                                onChange={() =>
+                                  handleFilter(option.value, section.id)
+                                }
                                 defaultValue={option.value}
                                 defaultChecked={option.checked}
                                 id={`filter-${section.id}-${optionIdx}`}
@@ -340,56 +354,58 @@ export default function Product() {
                     </Disclosure>
                   ))}
                   {singleFilter.map((section) => (
-                    <Disclosure
-                      key={section.id}
-                      as="div"
-                      className="border-b border-gray-200 py-6"
-                    >
-                      <h3 className="-my-3 flow-root">
-                        <DisclosureButton className="group flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
-                          <span className="font-medium text-gray-900">
-                            {section.name}
-                          </span>
-                          <span className="ml-6 flex items-center">
-                            <PlusIcon
-                              aria-hidden="true"
-                              className="h-5 w-5 group-data-[open]:hidden"
-                            />
-                            <MinusIcon
-                              aria-hidden="true"
-                              className="h-5 w-5 [.group:not([data-open])_&]:hidden"
-                            />
-                          </span>
-                        </DisclosureButton>
-                      </h3>
-                      <DisclosurePanel className="pt-6">
+                  <Disclosure
+                    key={section.id}
+                    as="div"
+                    className="border-b border-gray-200 py-6"
+                  >
+                    <h3 className="-my-3 flow-root">
+                      <DisclosureButton className="group flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                        <FormLabel
+                          sx={{ color: "black" }}
+                          id="demo-radio-buttons-group-label"
+                        >
+                          {section.name}
+                        </FormLabel>
+                        <span className="ml-6 flex items-center">
+                          <PlusIcon
+                            aria-hidden="true"
+                            className="h-5 w-5 group-data-[open]:hidden"
+                          />
+                          <MinusIcon
+                            aria-hidden="true"
+                            className="h-5 w-5 [.group:not([data-open])_&]:hidden"
+                          />
+                        </span>
+                      </DisclosureButton>
+                    </h3>
+
+                    <DisclosurePanel className="pt-6">
+                      <FormControl onChange={(e)=>handleRadioFilterChange(e,section.id)}>
                         <div className="space-y-4">
-                          {section.options.map((option, optionIdx) => (
-                            <div
-                              key={option.value}
-                              className="flex items-center"
-                            >
-                              <input
-                                onChange={()=>handleFilter(option.value, section.id)}
-                                defaultValue={option.value}
-                                defaultChecked={option.checked}
-                                id={`filter-${section.id}-${optionIdx}`}
-                                name={`${section.id}[]`}
-                                type="checkbox"
-                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                              />
-                              <label
-                                htmlFor={`filter-${section.id}-${optionIdx}`}
-                                className="ml-3 text-sm text-gray-600"
+                          <RadioGroup
+                            aria-labelledby="demo-radio-buttons-group-label"
+                            defaultValue="female"
+                            name="radio-buttons-group"
+                          >
+                            {section.options.map((option, optionIdx) => (
+                              <div
+                                key={option.value}
+                                className="flex items-center"
                               >
-                                {option.label}
-                              </label>
-                            </div>
-                          ))}
+                                <FormControlLabel
+                                  value={option.value}
+                                  control={<Radio />}
+                                  label={option.label}
+                                />
+                              </div>
+                            ))}
+                          </RadioGroup>
                         </div>
-                      </DisclosurePanel>
-                    </Disclosure>
-                  ))}
+                      </FormControl>
+                    </DisclosurePanel>
+                  </Disclosure>
+                ))}
                 </form>
               </div>
 
